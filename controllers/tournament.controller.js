@@ -65,3 +65,77 @@ export const getAllTournaments = async (req, res) => {
     res.status(500).json({ success: false, message: err.message });
   }
 };
+
+/* 🔥 GET BY ID */
+export const getTournamentById = async (req, res) => {
+  try {
+    const tournament = await Tournament.findById(req.params.id);
+
+    if (!tournament) {
+      return res.status(404).json({
+        success: false,
+        message: "Tournament not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      tournament,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const joinTournament = async (req, res) => {
+  try {
+    const tournament = await Tournament.findById(req.params.id);
+
+    // ❌ NOT FOUND
+    if (!tournament) {
+      return res.status(404).json({
+        success: false,
+        message: "Tournament not found",
+      });
+    }
+
+    // ❌ ALREADY JOINED
+    const alreadyJoined = tournament.joinedPlayers.includes(req.user._id);
+
+    if (alreadyJoined) {
+      return res.status(400).json({
+        success: false,
+        message: "Already joined contest",
+      });
+    }
+
+    // ❌ FULL
+    if (tournament.joinedPlayers.length >= tournament.totalSlots) {
+      return res.status(400).json({
+        success: false,
+        message: "Contest is full",
+      });
+    }
+
+    // ✅ JOIN
+    tournament.joinedPlayers.push(req.user._id);
+
+    await tournament.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Contest joined successfully 🚀",
+      tournament,
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};

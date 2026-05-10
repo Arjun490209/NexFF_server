@@ -5,9 +5,11 @@ import cors from "cors";
 import authRouter from "./routes/auth.route.js";
 import tournamentRouter from "./routes/tournament.route.js";
 import connectDB from "./config/db.js";
+import startTournamentCron from "./utils/tournamentStatusUpdater.js";
 
 const app = express();
 connectDB();
+startTournamentCron();
 
 const port = 3000;
 
