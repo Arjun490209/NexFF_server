@@ -1,31 +1,42 @@
 import express from "express";
+
 import protect from "../middleware/Protect.js";
+
 import {
   createTournament,
   deleteTournament,
   getAllTournaments,
+  getMyTournaments,
   getTournamentById,
   joinTournament,
   updateTournament,
+  cancelTournament,
 } from "../controllers/tournament.controller.js";
+
 const router = express.Router();
 
-/* 🔥 CREATE TOURNAMENT */
+/* 🔥 CREATE */
 router.post("/create", protect, createTournament);
 
-// 🔥 GET TOURNAMENTS
+/* 🔥 PUBLIC TOURNAMENTS */
 router.get("/", getAllTournaments);
 
-// 🔥 GET TOURNAMENT BY ID
-router.get("/:id", getTournamentById);
+/* 🔥 MY TOURNAMENTS */
+router.get("/my", protect, getMyTournaments);
 
-// 🔥 JOIN TOURNAMENT
+/* 🔥 JOIN */
 router.post("/join/:id", protect, joinTournament);
 
-// UPDATE
+/* 🔥 UPDATE */
 router.put("/update/:id", protect, updateTournament);
 
-// DELETE
+/* 🔥 CANCEL */
+router.put("/cancel/:id", protect, cancelTournament);
+
+/* 🔥 DELETE */
 router.delete("/delete/:id", protect, deleteTournament);
+
+/* ⚠️ ALWAYS KEEP LAST */
+router.get("/:id", getTournamentById);
 
 export default router;
