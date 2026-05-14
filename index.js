@@ -4,6 +4,8 @@ dotenv.config();
 import cors from "cors";
 import authRouter from "./routes/auth.route.js";
 import tournamentRouter from "./routes/tournament.route.js";
+import transactionRoutes from "./routes/transaction.routes.js";
+import paymentRoutes from "./routes/payment.routes.js";
 import connectDB from "./config/db.js";
 import startTournamentCron from "./utils/tournamentStatusUpdater.js";
 
@@ -28,6 +30,8 @@ app.get("/", (req, res) => {
 });
 app.use("/api/auth", authRouter);
 app.use("/api/tournament", tournamentRouter);
+app.use("/api/transaction", transactionRoutes);
+app.use("/api/payment", paymentRoutes);
 
 app.listen(port, () => {
   console.log(`server running port - ${port}`);
