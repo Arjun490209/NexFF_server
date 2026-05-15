@@ -62,11 +62,18 @@ export const verifyPayment = async (req, res) => {
       });
     }
 
-    // USER
+    // FIND USER
     const user = await User.findById(req.user._id);
 
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
     // UPDATE WALLET
-    user.walletBalance += Number(amount);
+    user.walletBalance = Number(user.walletBalance || 0) + Number(amount);
 
     await user.save();
 
@@ -80,11 +87,13 @@ export const verifyPayment = async (req, res) => {
       note: "Money Added via Razorpay",
     });
 
+    // RESPONSE
     res.status(200).json({
       success: true,
       message: "Payment Successful",
       walletBalance: user.walletBalance,
       transaction,
+      user,
     });
   } catch (error) {
     console.log(error);
