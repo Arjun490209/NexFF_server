@@ -104,3 +104,71 @@ export const verifyPayment = async (req, res) => {
     });
   }
 };
+
+export const withdrawMoney = async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    const { amount } = req.body;
+
+    // VALIDATION
+    if (!amount || amount <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid withdraw amount",
+      });
+    }
+
+    // FIND USER
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    // ONLY WINNING BALANCE CAN WITHDRAW
+    if (Number(amount) > Number(user.totalWinnings || 0)) {
+      return res.status(400).json({
+        success: false,
+        message: "Only winning balance withdrawable",
+      });
+    }
+
+    // UPDATE USER
+    user.walletBalance = Number(user.walletBalance || 0) - Number(amount);
+
+    user.totalWinnings = Number(user.totalWinnings || 0) - Number(amount);
+
+    user.totalWithdrawn = Number(user.totalWithdrawn || 0) + Number(amount);
+
+    // OPTIONAL TRANSACTION HISTORY
+    if (!user.transactions) {
+      user.transactions = [];
+    }
+
+    user.transactions.push({
+      type: "withdraw",
+      amount,
+      status: "pending",
+      createdAt: new Date(),
+    });
+
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Withdraw request submitted",
+      user,
+    });
+  } catch (error) {
+    console.log(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Server Error",
+    });
+  }
+};
