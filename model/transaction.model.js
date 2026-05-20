@@ -8,6 +8,9 @@ const transactionSchema = new mongoose.Schema(
       type: String,
       enum: ["deposit", "withdraw", "entry_fee", "winning", "bonus"],
     },
+    upiId: {
+      type: String,
+    },
 
     amount: Number,
 

@@ -25,6 +25,9 @@ const userSchema = new mongoose.Schema(
     totalDeposited: { type: Number, default: 0 },
     totalWithdrawn: { type: Number, default: 0 },
     totalWinnings: { type: Number, default: 0 },
+    upiId: {
+      type: String,
+    },
 
     // Stats 📊
     matchesPlayed: { type: Number, default: 0 },

@@ -1,6 +1,7 @@
 import User from "../model/userModel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import validator from "validator";
 
 const register = async (req, res) => {
   try {
@@ -9,6 +10,16 @@ const register = async (req, res) => {
     // ✅ validation
     if (!name || !username || !email || !phone || !password) {
       return res.status(400).json({ message: "All Fields Required." });
+    }
+    if (!validator.isEmail(email)) {
+      return res.status(400).json({
+        message: "Invalid Email",
+      });
+    }
+    if (!validator.isMobilePhone(phone, "en-IN")) {
+      return res.status(400).json({
+        message: "Invalid Phone Number",
+      });
     }
 
     // ✅ Check existing user
