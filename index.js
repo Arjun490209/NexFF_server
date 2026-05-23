@@ -45,7 +45,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRouter);
 app.use("/api/tournament", tournamentRouter);
 app.use("/api/transaction", transactionRoutes);
-app.use("/api/payment", paymentRoutes);
+// app.use("/api/payment", paymentRoutes);
 
 process.on("uncaughtException", (err) => {
   console.log("UNCAUGHT:", err);

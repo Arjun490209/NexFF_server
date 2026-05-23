@@ -10,11 +10,11 @@ import {
 
 const router = express.Router();
 
-router.post("/create-order", protect, createOrder);
+// router.post("/create-order", protect, createOrder);
 
-router.post("/verify-payment", protect, verifyPayment);
-router.post("/withdraw", protect, withdrawMoney);
+// router.post("/verify-payment", protect, verifyPayment);
+// router.post("/withdraw", protect, withdrawMoney);
 
-router.post("/webhook", razorpayWebhook);
+// router.post("/webhook", razorpayWebhook);
 
 export default router;
